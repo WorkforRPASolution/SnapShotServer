@@ -1,0 +1,8 @@
+# Maven 빌드 산출물
+/target/
+# IDE·OS 파일 (.idea 는 pom 연결 전 일반 Java 모듈 설정이라 공유하지 않는다)
+/.idea/
+*.iml
+.DS_Store
+# Claude Code 개인 설정
+.claude/settings.local.json
