@@ -30,7 +30,7 @@ class WriteWorker(conf: Config, cassandraConnection: Cluster) extends Actor {
       log.info(s"received UPLOAD: ${conv.hostname}, ${conv.filename}")
 
       FILETIMESTAMP.findFirstIn(conv.filename) match {
-        case Some(ret) => val FILETIMESTAMP(ts,ex,cy) = ret
+        case Some(ret) => val FILETIMESTAMP(ts,cx,cy) = ret
           try {
             val timestamp = new Timestamp(ts.toLong)
             val date = timestamp.toLocalDateTime.toLocalDate

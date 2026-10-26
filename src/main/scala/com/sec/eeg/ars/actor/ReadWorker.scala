@@ -3,15 +3,14 @@ package com.sec.eeg.ars.actor
 import java.sql.Timestamp
 
 import akka.actor.Actor
+import com.datastax.driver.core._
 import com.datastax.driver.core.exceptions.DriverException
-import com.datastax.driver.core.{Cluster, Session}
 import com.sec.eeg.ars.data._
 import com.typesafe.config.Config
 import org.json4s.DefaultFormats
 import org.slf4j.LoggerFactory
 
 class ReadWorker(conf: Config, cassandraConnection: Cluster) extends Actor {
-  import scala.concurrent.ExecutionContext.Implicits.global
   implicit val formats = DefaultFormats
   import org.json4s._
   import org.json4s.jackson.JsonMethods._
@@ -45,6 +44,7 @@ class ReadWorker(conf: Config, cassandraConnection: Cluster) extends Actor {
             case ex: DriverException =>
               log.warn(s"Cassandra driver exception: ${ex.getMessage}")
               sender() ! DIRRETURN("failed", ex.getMessage, List.empty[String])
+              throw ex
             case ex: NullPointerException =>
               log.warn(s"NullPointerException: ${ex.getMessage}")
               sender() ! DIRRETURN("failed", ex.getMessage, List.empty[String])
@@ -58,7 +58,7 @@ class ReadWorker(conf: Config, cassandraConnection: Cluster) extends Actor {
           val conv = data.extract[GETFILE]
 
           FILETIMESTAMP.findFirstIn(conv.filename) match {
-            case Some(ret) => val FILETIMESTAMP(ts,ex,cy) = ret
+            case Some(ret) => val FILETIMESTAMP(ts,cx,cy) = ret
               try{
                 var query = ""
                 val target_ts = ts.toLong
@@ -80,6 +80,7 @@ class ReadWorker(conf: Config, cassandraConnection: Cluster) extends Actor {
                 case ex: DriverException =>
                   log.warn(s"Cassandra driver exception: ${ex.getMessage}")
                   sender() ! IMGRETURN("failed", ex.getMessage, "")
+                  throw ex
                 case ex: NullPointerException =>
                   log.warn(s"NullPointerException: ${ex.getMessage}")
                   sender() ! IMGRETURN("failed", ex.getMessage, "")

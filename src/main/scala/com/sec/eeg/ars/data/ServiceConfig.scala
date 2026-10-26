@@ -19,10 +19,10 @@ object ServiceConfig {
   var ZookeeperQuorum : String = ""
   var MyServiceAddress : String = ""
   var RedisSentinelConnection : String = _
-  var ARSSnapShotServerRedisKey : String = "SnapshotServerInfo"
+  val ARSSnapShotServerRedisKey : String = "SnapshotServerInfo"
   var WriterWorkerCount = 10
   var ReadWorkerCount = 10
-  var FormatTransformerRouteCount = 5
+  var FormatTransformerRouterCount = 5
   var Version = "unknown"
   var ChangePoint = 0L
   val root_dir = System.getProperty("EEG_BASE")
@@ -86,11 +86,11 @@ object ServiceConfig {
     }
 
     try {
-      FormatTransformerRouteCount = confjson.get("FormatTransformerRouteCount").asInstanceOf[Long].toInt
-      if (FormatTransformerRouteCount == 0) FormatTransformerRouteCount = 5
+      FormatTransformerRouterCount = confjson.get("FormatTransformerRouterCount").asInstanceOf[Long].toInt
+      if (FormatTransformerRouterCount == 0) FormatTransformerRouterCount = 5
     }
     catch {
-      case _: Throwable => FormatTransformerRouteCount = 5
+      case _: Throwable => FormatTransformerRouterCount = 5
     }
 
     try {
@@ -101,10 +101,10 @@ object ServiceConfig {
 
     try {
       BatchWriteCount = confjson.get("BatchWriteCount").asInstanceOf[Long].toInt
-      if (BatchWriteCount == 0) BatchWriteCount = 1
+      if (BatchWriteCount <= 0) BatchWriteCount = 10
     }
     catch {
-      case _: Throwable => BatchWriteCount = 1
+      case _: Throwable => BatchWriteCount = 10
     }
 
     var BatchWriteDurationSeconds = 0

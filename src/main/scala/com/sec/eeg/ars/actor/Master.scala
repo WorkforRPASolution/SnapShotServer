@@ -90,7 +90,7 @@ class Master extends Actor {
   var zkCli : CuratorFramework = null
   var cassandraConnection: Cluster = null
 
-  private  def initializeCassandra = {
+  private def initializeCassandra = {
     import scala.collection.JavaConversions._
     val ctpLists = scala.collection.mutable.ListBuffer.empty[InetAddress]
     val address_port = ServiceConfig.CassandraAddress.split("#")
@@ -107,14 +107,17 @@ class Master extends Actor {
         cassandraConnection = Cluster.builder.addContactPoints(ctpLists).withCredentials(ServiceConfig.CassandraUserName,ServiceConfig.CassandraPassword).withPort(address_port(1).toInt)
           .withLoadBalancingPolicy(new TokenAwarePolicy(new RoundRobinPolicy()))
           .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.ONE))
-          .withReconnectionPolicy(new ExponentialReconnectionPolicy(10, 10000)).build()
+          .withReconnectionPolicy(new ExponentialReconnectionPolicy(10, 10000)).build
       }
       else {
         cassandraConnection = Cluster.builder.addContactPoints(ctpLists).withPort(address_port(1).toInt)
           .withLoadBalancingPolicy(new TokenAwarePolicy(new RoundRobinPolicy()))
           .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.ONE))
-          .withReconnectionPolicy(new ExponentialReconnectionPolicy(10, 10000)).build()
+          .withReconnectionPolicy(new ExponentialReconnectionPolicy(10, 10000)).build
       }
+    }
+    else {
+      throw new Exception("Invalid Cassandra connection info")
     }
   }
 
@@ -199,11 +202,11 @@ class Master extends Actor {
   }
 
   override def postStop() : Unit = {
-    try{
-      if(cassandraConnection != null){
+    try {
+      if (cassandraConnection != null) {
         cassandraConnection.close()
       }
-    }catch {
+    } catch {
       case _ =>
     }
     log.info("Master postStop")
@@ -221,7 +224,7 @@ class Master extends Actor {
 
       val cnt = context.children.size
       if(cnt <= 0){
-        context stop self
+        context.stop(self)
         system.terminate()
       }
       else{

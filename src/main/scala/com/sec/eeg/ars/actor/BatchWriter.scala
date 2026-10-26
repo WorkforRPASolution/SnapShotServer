@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 case class CheckBuffer()
 
-class BatchWriter(conf:Config, cassandraConnection: Cluster) extends Actor {
+class BatchWriter(conf: Config, cassandraConnection: Cluster) extends Actor {
   import scala.concurrent.ExecutionContext.Implicits.global
   implicit val formats = DefaultFormats
   import org.json4s._
@@ -31,7 +31,7 @@ class BatchWriter(conf:Config, cassandraConnection: Cluster) extends Actor {
       var query = "BEGIN BATCH "
       buffer.foreach(dt => {
         FILETIMESTAMP.findFirstIn(dt.filename) match {
-          case Some(ret) => val FILETIMESTAMP(ts,ex,cy) = ret
+          case Some(ret) => val FILETIMESTAMP(ts,cx,cy) = ret
             val timestamp = new Timestamp(ts.toLong)
             val date = timestamp.toLocalDateTime.toLocalDate
             val year = date.getYear

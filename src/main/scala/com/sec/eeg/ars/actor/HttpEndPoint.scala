@@ -11,7 +11,7 @@ import akka.util.Timeout
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import ch.megard.akka.http.cors.scaladsl.model.HttpHeaderRange
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
-import com.sec.eeg.ars.actor.Master.{ShutDown, conf}
+import com.sec.eeg.ars.actor.Master.ShutDown
 import com.sec.eeg.ars.data._
 import org.slf4j.LoggerFactory
 import spray.json.DefaultJsonProtocol._
@@ -56,7 +56,7 @@ object HttpEndPoint {
       }
     } ~
     path("EARS" / "kill") {
-      post{
+      post {
         system.actorSelection("/user/Master") ! ShutDown()
         complete("")
       }

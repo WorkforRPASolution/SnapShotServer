@@ -14,7 +14,7 @@ class Application extends Daemon {
 
   override def init(daemonContext: DaemonContext): Unit = {
     logger.info("ARSHBaseCamelServer service init")
-    var root_dir = System.getProperty("EEG_BASE")
+    val root_dir = System.getProperty("EEG_BASE")
     val akkaApplicationConf = new File(ServiceConfig.root_dir + s"/conf/${ServiceConfig.serviceName}/application.conf")
     conf = ConfigFactory.parseFile(akkaApplicationConf)
   }

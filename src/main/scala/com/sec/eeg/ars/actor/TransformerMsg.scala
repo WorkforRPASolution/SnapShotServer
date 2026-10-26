@@ -9,7 +9,7 @@ class TransformerMsg(rRouter: ActorRef, wRouter: ActorRef) extends Actor {
   private val log = LoggerFactory.getLogger(classOf[TransformerMsg])
   implicit val formats = DefaultFormats
   import org.json4s._
-  import  org.json4s.jackson.JsonMethods._
+  import org.json4s.jackson.JsonMethods._
   override def receive : Receive = {
     case msg : (String, String) =>
       msg._1 match {
